@@ -1,4 +1,5 @@
 from pprint import pprint
+
 rows, cols = (9, 9)
 sud_mtx = [[0] * cols] * rows
 gm = [
@@ -15,25 +16,32 @@ gm = [
 
 sz = 3
 static_set = set(range(1, sz * sz + 1))
-l = sz*sz
+l = sz * sz
+# l = 1
 
 def get_row_set(mtx, r, c):
     cr = mtx[r][c]
     rs = set(mtx[r]) - {cr} - {0}
+    # print("roe")
+    # pprint(set(mtx[r]))
     return rs
 
 
 def get_col_set(mtx, r, c):
     cr = mtx[r][c]
-    cs = set(mtx[c]) - {cr} - {0}
+    cs = set([i[c] for i in mtx]) - {cr} - {0} # TODO not right way of column pick
+    # print("cl")
+    # pprint(cs)
     return cs
 
 
 def get_squ_set(mtx, r, c):
     cr = mtx[r][c]
     # 1,4
-    start_r, end_r = r//sz, (r//sz)+sz  # extra for the range fuinc below
-    start_c, end_c = c//sz, (c//sz)+sz
+    start_r = sz * (r // sz)
+    end_r = start_r + sz  # extra for the range fuinc below
+    start_c = sz * (c // sz)
+    end_c = start_c + sz
     x = set()
     for i in range(start_r, end_r):
         for j in range(start_c, end_c):
@@ -41,8 +49,10 @@ def get_squ_set(mtx, r, c):
     cs = x - {cr} - {0}
     return cs
 
-# print(gm[0][7])
-print(static_set)
+
+pprint(gm)
+print("")
+# print(static_set)
 # print(sud_mtx)
 mc = 0
 added = True
@@ -56,8 +66,9 @@ while added:
                 rowset = get_row_set(gm, i, j)
                 colset = get_col_set(gm, i, j)
                 squset = get_squ_set(gm, i, j)
-                res = static_set - (rowset|colset|squset)
+                res = static_set - (rowset | colset | squset)
                 if len(res) == 1:
                     gm[i][j] = list(res)[0]
                     added = True
+    # pprint(gm)
 pprint(gm)
